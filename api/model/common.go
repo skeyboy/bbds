@@ -9,3 +9,7 @@ type ApiModel struct {
 	Result interface{}
 	Msg    string
 }
+
+func (m *ApiModel) Value() interface{} {
+	return m.Result
+}

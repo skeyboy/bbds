@@ -14,6 +14,11 @@
     <link href="//cdn.staticfile.org/layer/2.3/skin/layer.css" rel="stylesheet">
     <script src="//cdn.staticfile.org/layer/2.3/layer.js"></script>
     <script src="//cdn.staticfile.org/downloadjs/1.4.8/download.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+
 
     <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://www.ibilibili.com/css/ibilibili.css"/>
@@ -54,6 +59,8 @@
             }
         </script>
     </div>
+    <div id="example"></div>
+
 
     <audio id="player" autoplay="autoplay"></audio>
     <script>
@@ -71,8 +78,8 @@
             //var vurl = $("#videourl").val();
         }
 
-        function parseVideo(page,aid) {
-            $.getScript("//api.bilibili.com/playurl?callback=callbackfunction&aid="+aid+"&page=" + page + "&platform=html5&quality=1&vtype=mp4&type=jsonp");
+        function parseVideo(page, aid) {
+            $.getScript("//api.bilibili.com/playurl?callback=callbackfunction&aid=" + aid + "&page=" + page + "&platform=html5&quality=1&vtype=mp4&type=jsonp");
         }
 
         function getQueryString(name) {
@@ -93,6 +100,47 @@
         parseVideo({{.Page}},{{.Aid}});
 
 
+    </script>
+    <script type="text/babel">
+
+        class Up extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {ups: [], result: null};
+            }
+
+            componentDidMount() {
+                $.get(this.props.source, function (result) {
+                    var r = result;
+                    this.setState({
+                        result: r,
+                        ups: r.Result
+                    });
+                }.bind(this));
+            }
+
+            componentWillUnmount() {
+
+            }
+
+            render() {
+                var ups = [];
+                ups = this.state.ups.map(function (item) {
+                    return (<li ><a href="#"><div key={ups.length}><h1>{item.Mid}</h1><div>{item.Name}</div></div></a></li>);
+                });
+                return (
+                    <div>
+                        <h2>up列表</h2>
+                        <ul >
+                            {ups}
+                        </ul>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<Up
+            source="http://localhost:8080/api/up/page/1/status/0"/>, document.getElementById("example"));
     </script>
 
 

@@ -40,6 +40,9 @@ func Run(engine *gin.Engine) {
 	})
 	group.GET("/users/index", func(c *gin.Context) {
 		c.Header("P3P", "CP='IDC DSP COR CURa ADMa  OUR IND PHY ONL COM STA'")
+		c.Header("Access-Control-Allow-Origin", "'http://www.ibilibili.com")
+		c.Header("Access-Control-Expose-Headers", "Content-Length,Content-Range")
+		//c.Header("Referer","https://www.bilibili.com/video/av53178281/?p=2")
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title": "Users",
 		})

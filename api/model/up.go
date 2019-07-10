@@ -11,3 +11,7 @@ type Up struct {
 	Face   string
 	Name   string
 }
+
+func (up *Up) IsValid() bool {
+	return up.Status == 0
+}
