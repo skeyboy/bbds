@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="never">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>localhost</title>
+    <meta http-equiv="keywords" content="B站,bilibili视频下载,动漫视频下载,游戏视频"/>
+    <meta name="description" content="爱哔哩哔哩是提供给B站用户下载视频或查看up主头像、视频截图下载用的，关注点主要是动漫、游戏"/>
+    <link rel='dns-prefetch' href='//cdn.staticfile.org'/>
+    <script src="//cdn.staticfile.org/jquery/1.9.1/jquery.min.js"></script>
+    <link href="//cdn.staticfile.org/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//cdn.staticfile.org/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="//cdn.staticfile.org/layer/2.3/skin/layer.css" rel="stylesheet">
+    <script src="//cdn.staticfile.org/layer/2.3/layer.js"></script>
+    <script src="//cdn.staticfile.org/downloadjs/1.4.8/download.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.ibilibili.com/css/ibilibili.css"/>
+
+<body>
+<div style="width:60%;margin: 0 auto;margin-top: 5%;">
+    <div id="links">
+        <h4></h4>
+        <span style="color:darkgray;font-size: 12px;"></span>
+        <a href="https://i1.hdslb.com/bfs/archive/8e8d73c248937a10d201e6994118b072e6cc525f.jpg"
+           style="color:black;margin-right: 10px;" target="_blank">视频图片下载</a>
+        <a href="https://i2.hdslb.com/bfs/face/b0d408bac0d275feb5855bf31a036589aec63566.jpg" style="color:black"
+           target="_blank">作者头像下载</a>
+        <a href="http://www.bejson.com/convert/video2audio/" style="color:orangered" target="_blank">视频一秒转mp3、m4a</a>
+        <p></p>
+
+
+        <div style="clear: both;"></div>
+        <div id="vd" style="margin-top: 10px ;">
+
+        </div>
+        <div class="input-group" style="width:100%;display: none;margin-top: 10px;" id="videourlDV">
+
+            <input type="text" class="form-control" id="videourl" placeholder="" aria-describedby="basic-addon1">
+
+        </div>
+        <div>
+
+        </div>
+
+        <script type="text/javascript">
+            function jumpa(obj) {
+                window.open("http://www.acfun.cn/v/ac" + $(obj).attr("vid"));
+            }
+
+            function jump(obj) {
+                window.open("https://www.bilibili.com/av" + $(obj).attr("vid") + "/");
+            }
+        </script>
+    </div>
+
+    <audio id="player" autoplay="autoplay"></audio>
+    <script>
+        function callbackfunction(j) {
+            var u = j.durl[0].url;
+            $("#vd").html('<video width="680" height="376" poster="https://i1.hdslb.com/bfs/archive/8e8d73c248937a10d201e6994118b072e6cc525f.jpg" src="' + u + '" controls="controls"></video>')
+            $("#page1").attr("href", j.durl[0].url);
+            $("#videourl").val(j.durl[0].url);
+
+            $("#downloadita").attr("href", j.durl[0].url);
+            $("#downloadit").click(function () {
+                downloadita.click();
+            })
+            //$("#videourlDV").show();
+            //var vurl = $("#videourl").val();
+        }
+
+        function parseVideo(page,aid) {
+            $.getScript("//api.bilibili.com/playurl?callback=callbackfunction&aid="+aid+"&page=" + page + "&platform=html5&quality=1&vtype=mp4&type=jsonp");
+        }
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+        var p2 = 1;
+        if (getQueryString("p")) {
+            p2 = getQueryString("p");
+            console.log(p2);
+        }
+
+        // parseVideo(p2);
+
+        parseVideo({{.Page}},{{.Aid}});
+
+
+    </script>
+
+
+</div>
+<p>若有疑问请联系我 <a href="mailto:994158307@qq.com">给我发邮件</a></p>
+<!--<div style="color: #000000;position: absolute;left: 0;top: 0;width:100%;text-align: center;background-color: black;"><a style="color:white;text-align: center;" href="tencent://message/?uin=624767717&Site=&menu=yes">网站出售中,给的起10W的大佬M</a></div>-->
+<div style="display: none;">
+    <script src="https://s19.cnzz.com/z_stat.php?id=1274147956&web_id=1274147956" language="JavaScript"></script>
+</div>
+</body>
+</html>
