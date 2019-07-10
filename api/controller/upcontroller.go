@@ -14,7 +14,7 @@ import (
 )
 
 type UpController struct {
-	Router *gin.Engine
+	RouterGroup *gin.RouterGroup
 }
 
 const (
@@ -30,7 +30,7 @@ const (
 分页的方式列举出特定状态的up主
 */
 func (up *UpController) UpList() {
-	up.Router.GET("/up/page/:page/status/:status", func(context *gin.Context) {
+	up.RouterGroup.GET("/up/page/:page/status/:status", func(context *gin.Context) {
 		page, _ := strconv.Atoi(context.Param("page"))
 		status := context.Param("status")
 		//SELECT * FROM bbd_up WHERE   bbd_up.status =0 LIMIT 20 OFFSET 2
@@ -73,7 +73,7 @@ func (up *UpController) UpList() {
 不检测是否存在up
 */
 func (up *UpController) ChangeUpStaus() {
-	up.Router.GET("/up/change/:mid/status/:status", func(context *gin.Context) {
+	up.RouterGroup.GET("/up/change/:mid/status/:status", func(context *gin.Context) {
 		mid := context.Param("mid")
 		status := context.Param("status")
 		//找到up
