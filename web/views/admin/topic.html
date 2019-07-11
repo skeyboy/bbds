@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="referrer" content="never">
+    <meta charset="UTF-8">
+    <title>{{.Code}}</title>
+
+</head>
+<body>
+<div>
+    {{range .Result}}
+        <div>
+            <img width="60" height="60" src="http:{{.Pic}}" alt="{{.Description}}">
+            <div>
+                <a href="/web/admin/index/{{.Aid}}/page/1">     {{.Title}}</a>
+            </div>
+        </div>
+
+    {{end}}
+</div>
+
+</body>
+</html>

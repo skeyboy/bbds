@@ -5,6 +5,9 @@
 package web
 
 import (
+	"../common/model"
+	"../common/model/web"
+	"../db"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -12,13 +15,13 @@ import (
 
 func Run(engine *gin.Engine) {
 	//设置模版位置
-	engine.LoadHTMLFiles("./web/views/index.html")
+	engine.LoadHTMLGlob("./web/views/**/*")
 
 	//配置web服务 添加middleware
 	group := engine.Group("/web")
 	add(group, nil)
 
-	group.GET("/index/:aid/page/:page", func(c *gin.Context) {
+	group.GET("/admin/index/:aid/page/:page", func(c *gin.Context) {
 		aid := c.Param("aid")
 		page := c.Param("page")
 		fmt.Println(aid, page)
@@ -46,6 +49,40 @@ func Run(engine *gin.Engine) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title": "Users",
 		})
+	})
+	group.GET("/admin/up/:mid/topic", func(context *gin.Context) {
+		mid := context.Param("mid")
+		result := model.ApiModel{}
+		if db.CheckDB() {
+			stmt, err := db.FetchDB().Prepare("SELECT bt.mid,bt.aid,bt.title,bt.pic,bt.description,bt.status FROM bbd_topic bt WHERE bt.mid = ?")
+			if err != nil {
+				result.Msg = err.Error()
+				result.Code = model.ErrorCode
+			} else {
+				rows, err := stmt.Query(mid)
+				if err != nil {
+					result.Code = model.ErrorCode
+					result.Msg = err.Error()
+				} else {
+					topics := []web.Topic{}
+
+					for rows.Next() {
+
+						topic := web.Topic{}
+						rows.Scan(&topic.Mid, &topic.Aid, &topic.Title, &topic.Pic, &topic.Description, &topic.Status)
+
+						if len(topic.Title) > 0 {
+
+							topics = append(topics, topic)
+						}
+					}
+					result.Result = topics
+				}
+			}
+		}
+
+		fmt.Println(result)
+		context.HTML(http.StatusOK, "topic.html", result)
 	})
 }
 func add(group *gin.RouterGroup, middlewares ...gin.HandlerFunc) {

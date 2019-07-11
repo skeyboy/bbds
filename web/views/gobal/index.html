@@ -102,6 +102,25 @@
 
     </script>
     <script type="text/babel">
+        class UpTopic extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {};
+            }
+
+            componentDidMount() {
+
+            }
+
+            render() {
+                return (
+                    <div>
+
+                    </div>
+                );
+            }
+
+        }
 
         class Up extends React.Component {
             constructor(props) {
@@ -110,7 +129,7 @@
             }
 
             componentDidMount() {
-                $.get(this.props.source, function (result) {
+                this.req = $.get(this.props.source, function (result) {
                     var r = result;
                     this.setState({
                         result: r,
@@ -120,18 +139,30 @@
             }
 
             componentWillUnmount() {
-
             }
 
             render() {
                 var ups = [];
                 ups = this.state.ups.map(function (item) {
-                    return (<li ><a href="#"><div key={ups.length}><h1>{item.Mid}</h1><div>{item.Name}</div></div></a></li>);
+                    ///web/admin/up/70053549/topic
+                    var mid = "https://space.bilibili.com/" + item.Mid;
+                    mid = "/web/admin/up/" + item.Mid + "/topic"
+                    console.log(item)
+                    return (<li key={item.Mid}>
+                        <div>
+                            <img src={item.Face} width="60" height="60"/>
+                            <a href={mid}>
+                                <h1>版主:{item.Name}</h1>
+                                <h2>状态:{item.Status == 0 ? "待检测" : "已检测"}</h2>
+                            </a>
+                            <a>版主主题列表</a>
+                        </div>
+                    </li>);
                 });
                 return (
                     <div>
                         <h2>up列表</h2>
-                        <ul >
+                        <ul>
                             {ups}
                         </ul>
                     </div>
@@ -140,7 +171,7 @@
         }
 
         ReactDOM.render(<Up
-            source="http://localhost:8080/api/up/page/1/status/0"/>, document.getElementById("example"));
+            source="/api/up/page/1/status/0"/>, document.getElementById("example"));
     </script>
 
 
