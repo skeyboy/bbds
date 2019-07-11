@@ -59,6 +59,7 @@ func Run(engine *gin.Engine) {
 				result.Msg = err.Error()
 				result.Code = model.ErrorCode
 			} else {
+				defer stmt.Close()
 				rows, err := stmt.Query(mid)
 				if err != nil {
 					result.Code = model.ErrorCode

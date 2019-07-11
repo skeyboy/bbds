@@ -46,7 +46,7 @@ func (up *UpController) UpList() {
 					result.Code = common.ErrorCode
 					result.Msg = err.Error()
 				} else {
-
+					defer stmt.Close()
 					for rows.Next() {
 						up := model.Up{}
 						rows.Scan(&up.Id, &up.Mid, &up.Status, &up.Face, &up.Name)

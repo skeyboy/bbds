@@ -4,20 +4,72 @@
     <meta name="referrer" content="never">
     <meta charset="UTF-8">
     <title>{{.Code}}</title>
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
 
+    <script>
+        $(document).ready(function () {
+            $(".topic").hover(function () {
+                console.log(this);
+            }, function () {
+
+            });
+        });
+    </script>
+    <style type="text/css" rel="stylesheet">
+
+        div {
+            display: flex;
+            float: left;
+            flex-direction: column;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        #containter, .topic {
+            display: flex;
+            flex-direction: row;
+            margin-top: 10px;
+            justify-content: space-around;
+        }
+
+        .topic {
+            flex-direction: row;
+            align-items: center;
+            width: 450px;
+            justify-content: flex-start;
+            justify-items: flex-start;
+        }
+
+        .topic a {
+            width: 350px;
+            word-break: break-all;
+            text-overflow: ellipsis;
+            display: -webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+            -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+            -webkit-line-clamp: 3; /** 显示的行数 **/
+            overflow: hidden; /** 隐藏超出的内容 **/
+        }
+
+
+    </style>
 </head>
 <body>
-<div>
+<div id="containter">
     {{range .Result}}
-        <div>
+        <div data-mid="{{.Mid}}" class="topic">
             <img width="60" height="60" src="http:{{.Pic}}" alt="{{.Description}}">
             <div>
-                <a href="/web/admin/index/{{.Aid}}/page/1">     {{.Title}}</a>
+                <label>Mid:{{.Mid}}</label>
+                <label>Aid:{{.Aid}}</label>
+                <a href="/web/admin/index/{{.Aid}}/page/1">{{.Title}}</a>
             </div>
         </div>
 
     {{end}}
 </div>
-
 </body>
 </html>

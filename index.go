@@ -1,12 +1,18 @@
 package main
 
 import (
+	"./db"
 	Start "./start"
 	"github.com/gin-gonic/gin"
 )
 
 func start() {
 	Start.Run(run, middlewares())
+	defer func() {
+		if db.CheckDB() {
+			db.Close()
+		}
+	}()
 }
 
 //启动服务
