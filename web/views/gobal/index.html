@@ -33,7 +33,7 @@
 
         }
 
-        li{
+        li {
             list-style: none;
         }
 
@@ -80,7 +80,7 @@
     </div>
     <div id="example"></div>
 
-
+    <iframe width="0" height="0" src="https://www.bilibili.com" sandbox="" ></iframe>
     <audio id="player" autoplay="autoplay"></audio>
     <script>
         function callbackfunction(j) {
@@ -165,7 +165,7 @@
                 ups = this.state.ups.map(function (item) {
                     ///web/admin/up/70053549/topic
                     var mid = "https://space.bilibili.com/" + item.Mid;
-                    mid = "/web/admin/up/" + item.Mid + "/topic"
+                    mid = "/web/admin/topic/" + item.Mid + ""
                     console.log(item)
                     return (<li key={item.Mid}>
                         <div>
