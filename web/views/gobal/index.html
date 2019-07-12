@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="referrer" content="never">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <title>localhost</title>
+    <title id="title">{{.Result.Album.Title}}</title>
     <meta http-equiv="keywords" content="B站,bilibili视频下载,动漫视频下载,游戏视频"/>
     <meta name="description" content="爱哔哩哔哩是提供给B站用户下载视频或查看up主头像、视频截图下载用的，关注点主要是动漫、游戏"/>
     <link rel='dns-prefetch' href='//cdn.staticfile.org'/>
@@ -45,19 +45,15 @@
 <body>
 <div style="width:60%;margin: 0 auto;margin-top: 5%;">
     <div id="links">
-        <h4></h4>
-        <span style="color:darkgray;font-size: 12px;"></span>
-        <a href="https://i1.hdslb.com/bfs/archive/8e8d73c248937a10d201e6994118b072e6cc525f.jpg"
-           style="color:black;margin-right: 10px;" target="_blank">视频图片下载</a>
-        <a href="https://i2.hdslb.com/bfs/face/b0d408bac0d275feb5855bf31a036589aec63566.jpg" style="color:black"
-           target="_blank">作者头像下载</a>
-        <a href="http://www.bejson.com/convert/video2audio/" style="color:orangered" target="_blank">视频一秒转mp3、m4a</a>
+        <h4>{{.Result.Album.Title}}</h4>
         <p></p>
 
 
         <div style="clear: both;"></div>
         <div id="vd" style="margin-top: 10px ;">
 
+        </div>
+        <div>
         </div>
         <div class="input-group" style="width:100%;display: none;margin-top: 10px;" id="videourlDV">
 
@@ -78,14 +74,20 @@
             }
         </script>
     </div>
+    <div>
+
+        <ul id="album">
+{{/*          此处存放列表  */}}
+        </ul>
+    </div>
     <div id="example"></div>
 
-    <iframe width="0" height="0" src="https://www.bilibili.com" sandbox="" ></iframe>
+    <iframe width="0" height="0" src="https://www.bilibili.com" sandbox=""></iframe>
     <audio id="player" autoplay="autoplay"></audio>
     <script>
         function callbackfunction(j) {
             var u = j.durl[0].url;
-            $("#vd").html('<video width="680" height="376" poster="https://i1.hdslb.com/bfs/archive/8e8d73c248937a10d201e6994118b072e6cc525f.jpg" src="' + u + '" controls="controls"></video>')
+            $("#vd").html('<video width="680" height="376" poster="https://i1.hdslb.com/bfs/archive/8e8d73c248937a10d201e6994118b072e6cc525f.jpg" src="' + u + '" controls="controls" autoplay="autoplay"></video>')
             $("#page1").attr("href", j.durl[0].url);
             $("#videourl").val(j.durl[0].url);
 
@@ -111,35 +113,44 @@
         var p2 = 1;
         if (getQueryString("p")) {
             p2 = getQueryString("p");
-            console.log(p2);
+            // console.log(p2);
         }
 
         // parseVideo(p2);
+        var globalAid = {{.Result.Aid}};
 
-        parseVideo({{.Page}},{{.Aid}});
+
+        parseVideo({{.Result.Page}},globalAid);
+
+        function show(page,part) {
+            // alert(part);
+            parseVideo(page,globalAid);
+            document.getElementById("title").innerText = part;
+        }
+
+        function decodeJson(jsonStr) {
+            console.log(jsonStr);
+            if (jsonStr == "" || jsonStr === undefined) {
+                return;
+            }
+            var jsonVal = JSON.parse(jsonStr);
+            console.log(jsonVal);
+
+            var pages = jsonVal.reduxAsyncConnect.videoInfo.pages;
+            var ps = pages.map(function (v) {
+                return "<li  onclick=show(" + v.page+","+"\""+v.part+"\"" + ")><h2>" + v.part + "</h2></li>";
+            });
+            var lis = ps.join("");
+            // document.getElementById("album").appendChild(ps);
+            document.getElementById("album").innerHTML = lis;
+        }
+
+        decodeJson({{.Result.Album.Origin}});
 
 
     </script>
     <script type="text/babel">
-        class UpTopic extends React.Component {
-            constructor(props) {
-                super(props);
-                this.state = {};
-            }
 
-            componentDidMount() {
-
-            }
-
-            render() {
-                return (
-                    <div>
-
-                    </div>
-                );
-            }
-
-        }
 
         class Up extends React.Component {
             constructor(props) {
@@ -166,7 +177,7 @@
                     ///web/admin/up/70053549/topic
                     var mid = "https://space.bilibili.com/" + item.Mid;
                     mid = "/web/admin/topic/" + item.Mid + ""
-                    console.log(item)
+                    // console.log(item)
                     return (<li key={item.Mid}>
                         <div>
                             <img src={item.Face} width="60" height="60"/>
@@ -190,16 +201,11 @@
             }
         }
 
-        ReactDOM.render(<Up
-            source="/api/up/page/1/status/0"/>, document.getElementById("example"));
+        // ReactDOM.render(<Up
+        //     source="/api/up/page/1/status/0"/>, document.getElementById("example"));
     </script>
 
 
-</div>
-<p>若有疑问请联系我 <a href="mailto:994158307@qq.com">给我发邮件</a></p>
-<!--<div style="color: #000000;position: absolute;left: 0;top: 0;width:100%;text-align: center;background-color: black;"><a style="color:white;text-align: center;" href="tencent://message/?uin=624767717&Site=&menu=yes">网站出售中,给的起10W的大佬M</a></div>-->
-<div style="display: none;">
-    <script src="https://s19.cnzz.com/z_stat.php?id=1274147956&web_id=1274147956" language="JavaScript"></script>
 </div>
 </body>
 </html>

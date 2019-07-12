@@ -22,25 +22,31 @@ func Run(engine *gin.Engine) {
 	group := engine.Group("/web")
 	add(group, nil)
 
-	group.GET("/admin/index/:aid/up/:mid", func(c *gin.Context) {
-		aid := c.Param("aid")
-		page := c.Param("page")
-		//fmt.Println(aid, page)
-		//c.Header("Access-Control-Allow-Origin", "*")
-		//c.Header("Access-Control-Expose-Headers", "Content-Length,Content-Range")
-		////c.Header("Referer","https://www.bilibili.com/video/av53178281/?p=2")
-		//c.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36")
-		//c.Set("sid", "damu83pv")
-		//c.SetCookie("buvid3", "3F56ECAE-0C45-4A87-80C0-D6EDD5D5AD4592863infoc", 60*60*24*365*2, "/", ".bilibili.com", true, true)
-		//c.SetCookie("sid", "damu83pv", 60*60*24*365*2, "/", ".bilibili.com", true, true)
-		////c.SetCookie("Referer", "https://www.bilibili.com/video/av53178281/?p=2", 60*60*24*365*2, "/", ".bilibili.com", true, true)
-		////c.SetCookie("CURRENT_FNVAL", string(16), 60*60*24*365*2, "/", ".bilibili.com", true, true)
-		//c.SetCookie("damu83pv", "1", 60*60*24*365*2, "/", ".bilibili.com", true, true)
-		type Av struct {
-			Aid  string
-			Page string
+	group.GET("/admin/index/av/:aid/up/:mid", func(c *gin.Context) {
+		type Album struct {
+			Videos int
+			Title  string
+			Origin string
+			Aid    int64
 		}
-		c.HTML(http.StatusOK, "index.html", Av{Aid: aid, Page: page})
+		type Av struct {
+			Aid   string
+			Page  string
+			Album Album
+		}
+		aid := c.Param("aid")
+		sql := `select ba.videos, ba.title, ba.origin,ba.aid from bbd_album ba where ba.aid =?`
+		av := Av{Aid: aid, Page: "1"}
+
+		if db.CheckDB() {
+			stmt, _ := db.FetchDB().Prepare(sql)
+			row := stmt.QueryRow(aid)
+			row.Scan(&av.Album.Videos, &av.Album.Title, &av.Album.Origin, &av.Album.Aid)
+		}
+		result := model.ApiModel{}
+		result.Result = av
+
+		c.HTML(http.StatusOK, "index.html", result)
 	})
 	group.GET("/users/index", func(c *gin.Context) {
 		c.Header("P3P", "CP='IDC DSP COR CURa ADMa  OUR IND PHY ONL COM STA'")
