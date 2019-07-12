@@ -63,7 +63,7 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li onclick="onSelect(this)"><a href="#">禁用</a></li>
+                    <li onclick="onSelect({{.Mid}})"><a href="#">禁用</a></li>
                     <li onclick="onSelect(this)"><a href="#">通过</a></li>
                 </ul>
             </div>
@@ -71,7 +71,7 @@
             <div>
                 <a href="https://space.bilibili.com/{{.Mid}}"> <label>版主:{{.Mid}}</label></a>
                 <a href="https://www.bilibili.com/video/av{{.Aid}}"> <label>查看视频:{{.Aid}}</label></a>
-                <a href="/web/admin/index/{{.Aid}}/page/1">{{.Title}}</a>
+                <a href="/web/admin/index/av/{{.Aid}}/up/{{.Mid}}}">{{.Title}}</a>
             </div>
         </div>
     {{else}}
@@ -83,8 +83,7 @@
 
     function onSelect(e) {
 
-
-        alert(e.innerHTML);
+         alert("是否需要禁用"+e.toString());
     }
 </script>
 <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
