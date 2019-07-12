@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func Run(engine *gin.Engine) {
@@ -50,7 +51,44 @@ func Run(engine *gin.Engine) {
 			"title": "Users",
 		})
 	})
-	group.GET("/admin/up/:mid/topic", func(context *gin.Context) {
+	group.GET("/admin/up/page/:page", func(context *gin.Context) {
+		page := context.Param("page")
+		p, _ := strconv.Atoi(page)
+		offset := int((p - 1) * 20)
+		result := model.ApiModel{}
+		if db.CheckDB() {
+			stmt, err := db.FetchDB().Prepare("SELECT bp.* FROM bbd_up bp  ORDER BY bp.mid limit 20 offset ?")
+			if err != nil {
+				result.Msg = err.Error()
+				result.Code = model.ErrorCode
+			} else {
+				defer stmt.Close()
+				rows, err := stmt.Query(offset)
+				if err != nil {
+					result.Code = model.ErrorCode
+					result.Msg = err.Error()
+				} else {
+					ups := []web.Up{}
+
+					for rows.Next() {
+
+						up := web.Up{}
+						rows.Scan(&up.Id, &up.Mid, &up.Status, &up.Face, &up.Name)
+
+						if len(up.Name) > 0 {
+
+							ups = append(ups, up)
+						}
+					}
+					result.Result = ups
+				}
+			}
+		}
+
+		fmt.Println(result)
+		context.HTML(http.StatusOK, "up.html", result)
+	})
+	group.GET("/admin/topic/:mid", func(context *gin.Context) {
 		mid := context.Param("mid")
 		result := model.ApiModel{}
 		if db.CheckDB() {
