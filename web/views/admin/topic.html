@@ -9,15 +9,10 @@
     <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
     </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <script>
-        $(document).ready(function () {
-            $(".topic").hover(function () {
-                console.log(this);
-            }, function () {
 
-            });
-        });
     </script>
     <style type="text/css" rel="stylesheet">
 
@@ -61,15 +56,37 @@
 <div id="containter">
     {{range .Result}}
         <div data-mid="{{.Mid}}" class="topic">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true">
+                    审核
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li onclick="onSelect(this)"><a href="#">禁用</a></li>
+                    <li onclick="onSelect(this)"><a href="#">通过</a></li>
+                </ul>
+            </div>
             <img width="60" height="60" src="http:{{.Pic}}" alt="{{.Description}}">
             <div>
-                <label>Mid:{{.Mid}}</label>
-                <label>Aid:{{.Aid}}</label>
+                <a href="https://space.bilibili.com/{{.Mid}}"> <label>版主:{{.Mid}}</label></a>
+                <a href="https://www.bilibili.com/video/av{{.Aid}}"> <label>查看视频:{{.Aid}}</label></a>
                 <a href="/web/admin/index/{{.Aid}}/page/1">{{.Title}}</a>
             </div>
         </div>
 
     {{end}}
 </div>
+<script>
+
+
+    function onSelect(e) {
+
+
+        alert(e.innerHTML);
+    }
+</script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@ func init() {
 func bbdDB() {
 	lock.Lock()
 	defer lock.Unlock()
-	db, err := sql.Open("mysql", "root:12345678@/bbd")
+	db, err := sql.Open("mysql", "root:@/bbd")
 	if err != nil {
 		_HasDB = false
 	} else {
