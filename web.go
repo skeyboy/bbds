@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func main() {
+func web() {
 	router := gin.Default()
 	//router.LoadHTMLGlob("./views/**/*")
 	router.LoadHTMLFiles("./views/index.html")

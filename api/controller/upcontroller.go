@@ -59,6 +59,34 @@ func (up *UpController) UpList() {
 		context.JSONP(http.StatusOK, result)
 	})
 }
+func (up *UpController) UpAlbum() {
+	up.RouterGroup.GET("/up/topic/album/:aid", func(context *gin.Context) {
+		aid := context.Param("aid")
+		context.Header("Access-Control-Allow-Origin", "http://www.ibilibili.com")
+
+		sql := `select ba.id,ba.title,ba.origin, ba.aid from bbd_album ba where ba.aid=?`
+		stmt, _ := db.FetchDB().Prepare(sql)
+		var result = common.ApiModel{}
+
+		row := stmt.QueryRowContext(context, aid)
+
+		result.Code = common.SuccessDefaultCode
+		type Album struct {
+			Id     int64
+			Title  string
+			Origin string
+			Aid    int64
+		}
+
+		ab := Album{}
+		err := row.Scan(&ab.Id, &ab.Title, &ab.Origin, &ab.Aid)
+		if err != nil {
+			result.Msg = err.Error()
+		}
+		result.Result = ab
+		context.JSONP(http.StatusOK, result)
+	})
+}
 
 /*
 修改up主的状态

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="utf-8">
     <meta name="referrer" content="never">
-    <meta charset="UTF-8">
+    <meta name="referrer" content="never">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
     <title>{{.Code}}</title>
     <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
     <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
@@ -53,29 +55,98 @@
     </style>
 </head>
 <body>
+<iframe width="0" height="0" src="https://www.bilibili.com" sandbox=""></iframe>
 <div id="containter">
     {{range .Result}}
-        <div data-mid="{{.Mid}}" class="topic">
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="true">
-                    审核
-                    <span class="caret"></span>
+    <div data-mid="{{.Mid}}" class="topic">
+        <div class="dropdown" id="{{.Aid}}">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                审核
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" onclick="render({{.Aid}})">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal{{.Aid}}"> 查看
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li onclick="onSelect({{.Mid}})"><a href="#">禁用</a></li>
-                    <li onclick="onSelect(this)"><a href="#">通过</a></li>
-                </ul>
-            </div>
-            <img width="60" height="60" src="http:{{.Pic}}" alt="{{.Description}}">
-            <div>
-                <a href="https://space.bilibili.com/{{.Mid}}"> <label>版主:{{.Mid}}</label></a>
-                <a href="https://www.bilibili.com/video/av{{.Aid}}"> <label>查看视频:{{.Aid}}</label></a>
-                <a href="/web/admin/index/av/{{.Aid}}/up/{{.Mid}}}">{{.Title}}</a>
-            </div>
+                <button class="btn btn-primary" onclick="onSelect(this)"> 通过</button>
+            </ul>
+
+
         </div>
+
+
+        <img width="60" height="60" src="http:{{.Pic}}" alt="{{.Description}}">
+        <div>
+            <a href="https://space.bilibili.com/{{.Mid}}"> <label>版主:{{.Mid}}</label></a>
+            <a href="https://www.bilibili.com/video/av{{.Aid}}"> <label>查看视频:{{.Aid}}</label></a>
+            <a href="/web/admin/index/av/{{.Aid}}/up/{{.Mid}}}">{{.Title}}</a>
+        </div>
+    </div>
+    <script>
+        function dynamicRender(mId) {
+            var content = "";
+            var model = ` <div class="modal fade" id="myModal` + mId + `"` + ` tabindex="-1" role="dialog" aria-labelledby="myModalLabel">` +
+                ` <div class="modal-dialog" role="document">` +
+                ` <div class="modal-content">` +
+                ` <div class="modal-header">` +
+                `  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>` +
+                `<h4 class="modal-title" id="myModalLabel">视频列表</h4>` +
+                ` </div>` +
+                ` <div class="modal-body">`
+                + `<div id="inner` + mId + `"></div>` +
+                ` </div>` +
+                `  <div class="modal-footer">` +
+                `      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>` +
+                `  </div>` +
+                `  </div>` +
+                `  </div>` +
+                `  </div>`
+            var tmp = document.getElementById(mId).innerHTML
+            document.getElementById(mId).innerHTML = tmp + model;
+            insertNewItem(mId);
+
+        }
+
+
+        function insertNewItem(aid) {
+            var load = 1;
+            var interval = setInterval(function () {
+                document.getElementById("inner" + aid).innerText = "加载中：" + load;
+                load++;
+            }, 1 * 1000);
+            fetch("/api/up/topic/album/" + aid).then((v) => {
+                return v.json()
+            }).then((json) => {
+                clearInterval(interval);
+                var itme = JSON.parse(json.Result.Origin);
+                var pages = itme.reduxAsyncConnect.videoInfo.pages;
+                if (pages.length <= 1) {
+                    document.getElementById("inner" + aid).innerText = "没有视频";
+                } else {
+                    var list = pages.map(function (value) {
+                        console.log(value);
+                        return `<li><label>` + value.part + `</label></li>`;
+                    }).join(" ");
+                    console.log(list);
+                    document.getElementById("inner" + aid).innerHTML = `<ul>` + list + `</ul>`;
+                    console.log(document.getElementById("inner" + aid).innerText);
+
+                }
+            });
+        }
+
+
+        function render(aid) {
+            dynamicRender(aid);
+            var page = 1;
+            var mAid = parseInt(aid);
+            console.log(typeof aid);
+        }
+
+    </script>
+
     {{else}}
-        <h2>没有找到对应的资源</h2>
+    <h2>没有找到对应的资源</h2>
     {{end}}
 </div>
 <script>
@@ -83,7 +154,7 @@
 
     function onSelect(e) {
 
-         alert("是否需要禁用"+e.toString());
+        // alert("是否需要禁用" + e.toString());
     }
 </script>
 <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->

@@ -76,7 +76,7 @@
     </div>
     <div>
 
-        <ul id="album">
+        <ul id="album">#vd
 {{/*          此处存放列表  */}}
         </ul>
     </div>
@@ -86,6 +86,7 @@
     <audio id="player" autoplay="autoplay"></audio>
     <script>
         function callbackfunction(j) {
+            console.log(j);
             var u = j.durl[0].url;
             $("#vd").html('<video width="680" height="376" poster="https://i1.hdslb.com/bfs/archive/8e8d73c248937a10d201e6994118b072e6cc525f.jpg" src="' + u + '" controls="controls" autoplay="autoplay"></video>')
             $("#page1").attr("href", j.durl[0].url);

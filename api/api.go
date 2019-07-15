@@ -20,4 +20,5 @@ func Run(router *gin.Engine) {
 	upCtrl := controller.UpController{RouterGroup: group}
 	upCtrl.UpList()
 	upCtrl.ChangeUpStaus()
+	upCtrl.UpAlbum()
 }

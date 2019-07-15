@@ -8,6 +8,7 @@ import (
 	"../common/model"
 	"../common/model/web"
 	"../db"
+	m "./middleware"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -20,6 +21,7 @@ func Run(engine *gin.Engine) {
 
 	//配置web服务 添加middleware
 	group := engine.Group("/web")
+	m.UsemiddlewareFor(group)
 	add(group, nil)
 
 	group.GET("/admin/index/av/:aid/up/:mid", func(c *gin.Context) {
