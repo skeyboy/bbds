@@ -1,0 +1,81 @@
+{{define "content"}}
+
+    <div class="container-fluid">
+        <div class="row align-items-start justify-content-between">
+            {{range $index, $value:= .Result}}
+            {{if (eq $index 5) }}
+            <div class="card text-start" style="width: 12rem;margin-bottom: 1rem; padding: 5px;">
+
+                {{else}}
+                <div class="card w-25 text-start" style="width: 12rem;margin-bottom: 1rem; padding: 5px;">
+                    {{end}}
+
+                    <img class="card-img-top" src="{{$value.Face}}">
+                    <div class="card-body">
+                        <h4 class="card-text">{{$value.Name}}</h4>
+                    </div>
+                    <a class="card-footer" onmouseenter="onMouseIn(this)" onmouseleave="onMouseLeave(this)"
+                       href="/web/admin/topic/{{$value.Mid}}">
+                        <div>
+                            <label>版主：{{$value.Mid}}</label>
+                            <label>本地：{{$value.Id}}</label>
+                        </div>
+                    </a>
+                </div>
+
+                {{end}}
+            </div>
+        </div>
+        <nav aria-label="Page navigation example" style="position: fixed; bottom: 30px;right: 20px;margin: 0 auto;">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" onclick="PrePage(this, {{.Page}})">上一页</a></li>
+
+                <li class="page-item"><a class="page-link" href="#" onclick="NextPage(this,{{.Page}})">下一页</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+
+
+        function PrePage(e, page) {
+            if (page == 1) {
+                return;
+            }
+            var p = "/web/admin/up/page/" + (page - 1).toString();
+            console.log(p);
+            window.document.location.assign(p)
+        }
+
+        function NextPage(e, page) {
+            var p = "/web/admin/up/page/" + (page + 1).toString()
+            console.log(p);
+            window.document.location.assign(p)
+        }
+    </script>
+{{end}}
+{{define "head"}}
+    <title>丿列表</title>
+{{end}}
+{{define "head-script"}}
+    <script>
+        function onMouseIn(e) {
+            // e.style.borderStyle ="thick solid";
+            e.style.border = "thick solid #FF0000"
+
+        }
+
+        function onMouseLeave(e) {
+            e.style.border = "thick solid white"
+
+            // e.style.borderStyle ="thick solid";
+
+        }
+    </script>
+    <style>
+        body {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </style>
+{{end}}

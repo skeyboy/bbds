@@ -1,0 +1,46 @@
+
+{{define "head"}}
+
+{{end}}
+{{define "content"}}
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark align-items-start">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav row align-items-start justify-content-between">
+                    {{range .Result}}
+                        <li class="nav-item active">
+                            <a role="button" class="btn nav-item nav-link active" href="/{{.Id}}.html">{{.Name}}</a>
+                        </li>
+                    {{end}}
+                </ul>
+
+            </div>
+
+        </nav>
+        <div class="row align-items-start justify-content-between">
+            {{range .Result}}
+                <div class="card" style="width: 15rem;">
+                    <img class="card-img-top"
+                         src="http://i0.hdslb.com/bfs/archive/4dfaec064e0de989eef9057f9ce06f038c930002.jpg"
+                         alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk
+                            of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            {{end}}
+
+
+        </div>
+
+
+    </div>
+
+{{end}}

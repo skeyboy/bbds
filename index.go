@@ -18,9 +18,9 @@ func start() {
 //启动服务
 func run(engin *gin.Engine) {
 	globalConfig(engin)
-	err := engin.Run(":8080")
+	err := engin.Run(":8081")
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 }
 
@@ -31,7 +31,8 @@ func middlewares() []gin.HandlerFunc {
 
 //此处进行一些全局性设置
 func globalConfig(engin *gin.Engine) {
-
+	//engin.Static("/resources","./web")
+	//engin.StaticFS("/resources",http.Dir("./web"))
 }
 
 //启动入口

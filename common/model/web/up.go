@@ -10,4 +10,5 @@ type Up struct {
 	Status int64
 	Face   string
 	Name   string
+	Date   string
 }

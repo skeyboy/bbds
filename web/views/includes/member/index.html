@@ -22,26 +22,7 @@
 
     <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://www.ibilibili.com/css/ibilibili.css"/>
-    <style>
-        div {
-            display: flex;
-            flex-direction: column;
-        }
 
-        .up {
-            display: flex;
-
-        }
-
-        li {
-            list-style: none;
-        }
-
-        .up div {
-            align-items: center;
-            flex-direction: row;
-        }
-    </style>
 <body>
 <div style="width:60%;margin: 0 auto;margin-top: 5%;">
     <div id="links">
@@ -77,7 +58,7 @@
     <div>
 
         <ul id="album">#vd
-{{/*          此处存放列表  */}}
+            {{/*          此处存放列表  */}}
         </ul>
     </div>
     <div id="example"></div>
@@ -121,11 +102,11 @@
         var globalAid = {{.Result.Aid}};
 
 
-        parseVideo({{.Result.Page}},globalAid);
+        parseVideo({{.Result.Page}}, globalAid);
 
-        function show(page,part) {
+        function show(page, part) {
             // alert(part);
-            parseVideo(page,globalAid);
+            parseVideo(page, globalAid);
             document.getElementById("title").innerText = part;
         }
 
@@ -139,7 +120,7 @@
 
             var pages = jsonVal.reduxAsyncConnect.videoInfo.pages;
             var ps = pages.map(function (v) {
-                return "<li  onclick=show(" + v.page+","+"\""+v.part+"\"" + ")><h2>" + v.part + "</h2></li>";
+                return "<li  onclick=show(" + v.page + "," + "\"" + v.part + "\"" + ")><h2>" + v.part + "</h2></li>";
             });
             var lis = ps.join("");
             // document.getElementById("album").appendChild(ps);

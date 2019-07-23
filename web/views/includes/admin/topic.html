@@ -1,0 +1,133 @@
+
+{{define "head-script"}}
+
+{{end}}
+{{define "head"}}
+    <title>主题{{.Code}}</title>
+{{end}}
+{{define "content"}}
+
+    <iframe width="0" height="0" src="https://www.bilibili.com" sandbox=""></iframe>
+    <div id="container-fluid">
+        <div class="row align-items-start justify-content-between">
+            {{range .Result}}
+            <div class="card text-start" id="{{.Aid}}" style="width: 24%;">
+                <div class="card-header">
+                    <span class="card-text" data-toggle="tooltip">{{.Title}}</span>
+                </div>
+                <img class="card-img-top" src="http:{{.Pic}}" alt="{{.Description}}"/>
+                <div class="card-body">
+                    <label>版主:{{.Mid}}</label>
+                    <h4 class="card-text" style="height: 15rem;overflow: hidden;text-overflow: ellipsis;">{{.Description}}</h4>
+                    <br>
+                    <a class="card-link" href="https://www.bilibili.com/video/av{{.Aid}}">
+
+                        <label>查看视频:{{.Aid}}</label>
+                    </a>
+                    <br>
+                    <a class="card-link" href="/web/admin/index/av/{{.Aid}}/up/{{.Mid}}}">{{.Title}}</a>
+                </div>
+            </div>
+            <script>
+                function dynamicRender(mId) {
+                    var content = "";
+                    var model = ` <div class="modal fade" id="myModal` + mId + `"` + ` tabindex="-1" role="dialog" aria-labelledby="myModalLabel">` +
+                        ` <div class="modal-dialog" role="document">` +
+                        ` <div class="modal-content">` +
+                        ` <div class="modal-header">` +
+                        `  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>` +
+                        `<h4 class="modal-title" id="myModalLabel">视频列表</h4>` +
+                        ` </div>` +
+                        ` <div class="modal-body">`
+                        + `<div id="inner` + mId + `"></div>` +
+                        ` </div>` +
+                        `  <div class="modal-footer">` +
+                        `      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>` +
+                        `  </div>` +
+                        `  </div>` +
+                        `  </div>` +
+                        `  </div>`
+                    var tmp = document.getElementById(mId).innerHTML
+                    document.getElementById(mId).innerHTML = tmp + model;
+                    insertNewItem(mId);
+
+                }
+
+
+                function insertNewItem(aid) {
+                    var load = 1;
+                    var interval = setInterval(function () {
+                        document.getElementById("inner" + aid).innerText = "加载中：" + load;
+                        load++;
+                    }, 1 * 1000);
+                    fetch("/api/up/topic/album/" + aid).then((v) => {
+                        return v.json()
+                    }).then((json) => {
+                        clearInterval(interval);
+                        var itme = JSON.parse(json.Result.Origin);
+                        var pages = itme.reduxAsyncConnect.videoInfo.pages;
+                        if (pages.length <= 1) {
+                            document.getElementById("inner" + aid).innerText = "没有视频";
+                        } else {
+                            var list = pages.map(function (value) {
+                                console.log(value);
+                                return `<li><label>` + value.part + `</label></li>`;
+                            }).join(" ");
+                            console.log(list);
+                            document.getElementById("inner" + aid).innerHTML = `<ul>` + list + `</ul>`;
+                            console.log(document.getElementById("inner" + aid).innerText);
+
+                        }
+                    });
+                }
+
+
+                function render(aid) {
+                    dynamicRender(aid);
+                    var page = 1;
+                    var mAid = parseInt(aid);
+                    console.log(typeof aid);
+                }
+
+            </script>
+            {{else}}
+            <div class="container align-items-center">
+
+                <button id="back-indicator" class="btn btn-default" onclick="goback()">没有主题,3秒后将会关闭<span
+                            class="card-text">点击立刻关闭</span></button>
+            </div>
+            <script>
+                var timer = 3;
+
+                function goback() {
+                    window.history.back();
+                }
+
+                setTimeout(function () {
+                    goback();
+                }, timer * 1000);
+                var indicator = setInterval(function () {
+                    timer = timer - 1;
+                    document.getElementById("back-indicator").innerHTML = '没有主题' + timer + '秒后将会关闭<span\n' +
+                        '                    class="card-text">点击立刻关闭</span>';
+                    if (timer == 0) {
+                        clearInterval(indicator);
+                        window.close();
+                    }
+
+                }, 1 * 1000);
+
+            </script>
+            {{end}}
+        </div>
+
+    </div>
+    <script>
+
+
+        function onSelect(e) {
+
+            // alert("是否需要禁用" + e.toString());
+        }
+    </script>
+{{end}}
