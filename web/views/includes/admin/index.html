@@ -4,16 +4,11 @@
 
 {{define "head-script"}}
     <link rel='dns-prefetch' href='//cdn.staticfile.org'/>
-    <script src="//cdn.staticfile.org/jquery/1.9.1/jquery.min.js"></script>
     <link href="//cdn.staticfile.org/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <script src="//cdn.staticfile.org/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <link href="//cdn.staticfile.org/layer/2.3/skin/layer.css" rel="stylesheet">
-    <script src="//cdn.staticfile.org/layer/2.3/layer.js"></script>
-    <script src="//cdn.staticfile.org/downloadjs/1.4.8/download.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
     <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
     <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
-    <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
 
 
     <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
@@ -24,173 +19,99 @@
 
 {{define "content"}}
 
-    <div style="width:60%;margin: 0 auto;margin-top: 5%;">
-        <div id="links">
-            <h4>{{.Result.Album.Title}}</h4>
-            <p></p>
+    <div class="container justify-content-center" style="height: 768px;width: 100%">
+        <div class="navbar"></div>
+        <div class="row align-items-start justify-content-end">
+            <div id="vd" style="width: 60%;height: auto;"></div>
+            <div class="row align-items-start" style="width: 25%;margin-left: 2rem">
+                <ul class="nav" id="album">
 
-
-            <div style="clear: both;"></div>
-            <div id="vd" style="margin-top: 10px ;">
-
+                </ul>
             </div>
-            <div>
-            </div>
-            <div class="input-group" style="width:100%;display: none;margin-top: 10px;" id="videourlDV">
-
-                <input type="text" class="form-control" id="videourl" placeholder="" aria-describedby="basic-addon1">
-
-            </div>
-            <div>
-
-            </div>
-
-            <script type="text/javascript">
-                function jumpa(obj) {
-                    window.open("http://www.acfun.cn/v/ac" + $(obj).attr("vid"));
-                }
-
-                function jump(obj) {
-                    window.open("https://www.bilibili.com/av" + $(obj).attr("vid") + "/");
-                }
-            </script>
-        </div>
-        <div>
-
-            <ul id="album">#vd
-                {{/*          此处存放列表  */}}
-            </ul>
         </div>
         <div id="example"></div>
 
         <iframe width="8" height="8"
                 src="https://www.bilibili.com/blackboard/html5mobileplayer.html?aid=41990468&cid=73717095&page=1&high_quality=1"
                 style="display: none;"></iframe>
-        <script>
+    </div>
 
-            function callbackfunction(j) {
-                console.log(j);
-                var u = j.durl[0].url;
-                var poster = j.img;
-                var duration = j.timelength;
-                var videoObject = {
-                    container: '#vd',//“#”代表容器的ID，“.”或“”代表容器的class
-                    variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
-                    video:j.durl[0].url,//视频地址
-                    poster:poster ,
-                    duration:duration/1000
-                };
 
-                var player=new ckplayer(videoObject);
+
+
+    <script>
+
+        function callbackfunction(j) {
+            console.log(j);
+            var u = j.durl[0].url;
+            var poster = j.img;
+            var duration = j.timelength;
+            var videoObject = {
+                container: '#vd',//“#”代表容器的ID，“.”或“”代表容器的class
+                variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
+                video: j.durl[0].url,//视频地址
+                poster: poster,
+                duration: duration / 1000
+            };
+
+            var player = new ckplayer(videoObject);
+        }
+
+        function parseVideo(page, aid) {
+            var link = "//api.bilibili.com/playurl?callback=callbackfunction&aid=" + aid + "&page=" + page + "&platform=html5&quality=1&vtype=mp4&type=jsonp";
+            console.log(link);
+            $.getScript(link);
+
+        }
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+
+        function changeSource(page, aid) {
+            // alert(page);
+            parseVideo(page, aid);
+            document.getElementById("title").innerText = part;
+        }
+
+        function decodeJson(jsonStr) {
+            console.log(jsonStr);
+            if (jsonStr == "" || jsonStr === undefined) {
+                return;
             }
+            var jsonVal = JSON.parse(jsonStr);
+            console.log(jsonVal);
 
-            function parseVideo(page, aid) {
-                $.getScript("//api.bilibili.com/playurl?callback=callbackfunction&aid=" + aid + "&page=" + page + "&platform=html5&quality=1&vtype=mp4&type=jsonp");
-            }
-
-            function getQueryString(name) {
-                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-                var r = window.location.search.substr(1).match(reg);
-                if (r != null) return unescape(r[2]);
-                return null;
-            }
-
-            var p2 = 1;
-            if (getQueryString("p")) {
-                p2 = getQueryString("p");
-                // console.log(p2);
-            }
-
-            // parseVideo(p2);
+            var pages = jsonVal.reduxAsyncConnect.videoInfo.pages;
             var globalAid = {{.Result.Aid}};
 
-
-            parseVideo({{.Result.Page}}, globalAid);
-
-            function show(page, part) {
-                // alert(part);
-                parseVideo(page, globalAid);
-                document.getElementById("title").innerText = part;
-            }
-
-            function decodeJson(jsonStr) {
-                console.log(jsonStr);
-                if (jsonStr == "" || jsonStr === undefined) {
-                    return;
-                }
-                var jsonVal = JSON.parse(jsonStr);
-                console.log(jsonVal);
-
-                var pages = jsonVal.reduxAsyncConnect.videoInfo.pages;
-                var ps = pages.map(function (v) {
-                    return "<li  onclick=show(" + v.page + "," + "\"" + v.part + "\"" + ")><h2>" + v.part + "</h2></li>";
-                });
-                var lis = ps.join("");
-                // document.getElementById("album").appendChild(ps);
-                document.getElementById("album").innerHTML = lis;
-            }
-
-            decodeJson({{.Result.Album.Origin}});
+            var ps = pages.map(function (v) {
+                var li = "<li id='" + v.page + "'" + " class='nav-item' onclick=changeSource(" + v.page + "," + globalAid + ")><h5>" + v.part + "</h5></li>";
 
 
-        </script>
-        <script type="text/babel">
+
+                return li;
+            });
+            var lis = ps.join("");
+            document.getElementById("album").innerHTML = lis;
+
+        }
 
 
-            class Up extends React.Component {
-                constructor(props) {
-                    super(props);
-                    this.state = {ups: [], result: null};
-                }
+        var p2 = 1;
+        if (getQueryString("p")) {
+            p2 = getQueryString("p");
+        }
 
-                componentDidMount() {
-                    this.req = $.get(this.props.source, function (result) {
-                        var r = result;
-                        this.setState({
-                            result: r,
-                            ups: r.Result
-                        });
-                    }.bind(this));
-                }
+        var globalAid = {{.Result.Aid}};
+        var page = {{.Result.Page}};
+        var orign = {{.Result.Album.Origin}};
+        decodeJson(orign);
+        parseVideo(page, globalAid);
+    </script>
 
-                componentWillUnmount() {
-                }
-
-                render() {
-                    var ups = [];
-                    ups = this.state.ups.map(function (item) {
-                        ///web/admin/up/70053549/topic
-                        var mid = "https://space.bilibili.com/" + item.Mid;
-                        mid = "/web/admin/topic/" + item.Mid + ""
-                        // console.log(item)
-                        return (<li key={item.Mid}>
-                            <div>
-                                <img src={item.Face} width="60" height="60"/>
-                                <div>
-                                    <a href={mid}>
-                                        <h1>版主:{item.Name}</h1>
-                                        <h2>状态:{item.Status == 0 ? "待检测" : "已检测"}</h2>
-                                    </a>
-                                </div>
-
-                            </div>
-                        </li>);
-                    });
-                    return (
-
-                        <div class="up">
-                            <h2>up列表</h2>
-                            {ups}
-                        </div>
-                    );
-                }
-            }
-
-            // ReactDOM.render(<Up
-            //     source="/api/up/page/1/status/0"/>, document.getElementById("example"));
-        </script>
-
-
-    </div>
-    </body>
 {{end}}
